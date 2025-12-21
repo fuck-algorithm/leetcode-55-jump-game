@@ -1,0 +1,164 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-bottom: 1px solid #0f3460;
+  height: 48px;
+  box-sizing: border-box;
+}
+
+.header-left {
+  flex: 1;
+}
+
+.back-link {
+  color: #4fc3f7;
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: #81d4fa;
+}
+
+.header-center {
+  flex: 2;
+  text-align: center;
+}
+
+.title-link {
+  text-decoration: none;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.title:hover {
+  color: #4fc3f7;
+}
+
+.header-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.thoughts-btn {
+  background: #0f3460;
+  border: 1px solid #4fc3f7;
+  color: #4fc3f7;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.thoughts-btn:hover {
+  background: #4fc3f7;
+  color: #1a1a2e;
+}
+
+.github-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 10px;
+  background: #0f3460;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.github-link:hover {
+  background: #1a4a7a;
+}
+
+.github-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.star-count {
+  font-size: 13px;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #1a1a2e;
+  border: 1px solid #0f3460;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: #fff;
+}
+
+.thoughts-content {
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+.thoughts-content h2 {
+  color: #4fc3f7;
+  margin-top: 0;
+}
+
+.thoughts-content h3 {
+  color: #81d4fa;
+  margin-top: 20px;
+}
+
+.thoughts-content code {
+  background: #0f3460;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Consolas', monospace;
+}
+
+.thoughts-content ul {
+  padding-left: 20px;
+}
+
+.thoughts-content li {
+  margin: 6px 0;
+}

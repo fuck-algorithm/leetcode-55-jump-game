@@ -1,0 +1,107 @@
+.code-panel {
+  display: flex;
+  flex-direction: column;
+  background: #1a1a2e;
+  border: 1px solid #0f3460;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 100%;
+}
+
+.code-header {
+  padding: 8px 12px;
+  background: #16213e;
+  border-bottom: 1px solid #0f3460;
+}
+
+.language-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.language-tab {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #888;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.language-tab:hover {
+  color: #4fc3f7;
+}
+
+.language-tab.active {
+  background: #0f3460;
+  border-color: #4fc3f7;
+  color: #4fc3f7;
+}
+
+.code-content {
+  flex: 1;
+  overflow: auto;
+  padding: 12px 0;
+}
+
+.code-block {
+  margin: 0;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.code-line {
+  display: flex;
+  align-items: flex-start;
+  padding: 2px 12px;
+  transition: background 0.2s;
+}
+
+.code-line.highlighted {
+  background: rgba(79, 195, 247, 0.15);
+  border-left: 3px solid #4fc3f7;
+  padding-left: 9px;
+}
+
+.line-number {
+  width: 28px;
+  color: #555;
+  text-align: right;
+  margin-right: 16px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.line-content {
+  flex: 1;
+  color: #e0e0e0;
+  white-space: pre;
+}
+
+.variable-annotation {
+  color: #4caf50;
+  margin-left: 20px;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+/* 语法高亮 */
+.keyword {
+  color: #c792ea;
+}
+
+.number {
+  color: #f78c6c;
+}
+
+.string {
+  color: #c3e88d;
+}
+
+.comment {
+  color: #546e7a;
+  font-style: italic;
+}
