@@ -53,16 +53,12 @@
   }
 }
 
-.canvas-description {
-  width: 100%;
-  color: #d9e3f4;
-  font-size: 13px;
-  line-height: 1.45;
-  text-align: center;
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 2px 8px;
+.narrative-group {
+  pointer-events: none;
+}
+
+.narrative-card {
+  vector-effect: non-scaling-stroke;
 }
 
 .reset-view-btn {

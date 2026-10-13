@@ -50,9 +50,16 @@
 }
 
 .step-description {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.step-description strong {
+  color: #ffcb75;
+  font-family: 'Cascadia Code', Consolas, monospace;
+  font-weight: 600;
 }
 
 .complete-badge {

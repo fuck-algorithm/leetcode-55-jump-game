@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { savePlaybackSpeed, getPlaybackSpeed } from '../../utils/db';
+import type { StepNarrative } from '../../utils/stepNarrative';
 import './ControlPanel.css';
 
 interface ControlPanelProps {
@@ -7,6 +8,7 @@ interface ControlPanelProps {
   totalSteps: number;
   currentAction: 'init' | 'check' | 'update' | 'fail' | 'success' | null;
   currentDescription: string;
+  narrative: StepNarrative | null;
   isPlaying: boolean;
   onPlay: () => void;
   onPause: () => void;
@@ -32,6 +34,7 @@ export function ControlPanel({
   totalSteps,
   currentAction,
   currentDescription,
+  narrative,
   isPlaying,
   onPlay,
   onPause,
@@ -114,8 +117,10 @@ export function ControlPanel({
   return (
     <div className="control-panel">
       <div className="step-summary" aria-live="polite">
-        <span className={`action-badge action-${currentAction ?? 'idle'}`}>{actionLabel}</span>
-        <span className="step-description">{currentDescription}</span>
+        <span className={`action-badge action-${currentAction ?? 'idle'}`}>{narrative?.title ?? actionLabel}</span>
+        <span className="step-description" title={currentDescription}>
+          {narrative ? <><strong>{narrative.detail}</strong>{' · '}{narrative.conclusion}</> : currentDescription}
+        </span>
         {isComplete && <span className="complete-badge">已完成</span>}
       </div>
       <div className="control-buttons">

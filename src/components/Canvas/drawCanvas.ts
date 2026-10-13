@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import type { AlgorithmStep } from '../../types';
+import type { StepNarrative } from '../../utils/stepNarrative';
 import { getCanvasLayout } from './layout';
 
 interface CanvasTransform {
@@ -17,6 +18,7 @@ export function drawCanvas(
   transform: CanvasTransform,
   reducedMotion: boolean,
   isDragging: boolean,
+  narrative: StepNarrative | null,
 ): void {
 
   if (!svgElement || !currentStep || !container) return;
@@ -287,7 +289,7 @@ export function drawCanvas(
   const panelX = 18;
   const panelY = 18;
   const panelWidth = width < 560 ? 156 : 184;
-  const panelHeight = 116;
+  const panelHeight = 98;
   transition(variablePanel)
     .attr('transform', `translate(${panelX}, ${panelY})`)
     .style('opacity', 1);
@@ -305,7 +307,6 @@ export function drawCanvas(
   const variableValues = [
     `i = ${currentStep.variables.i >= 0 ? currentStep.variables.i : '—'}`,
     `k = ${currentStep.variables.k}`,
-    `nums[i] = ${currentStep.variables['nums[i]'] >= 0 ? currentStep.variables['nums[i]'] : '—'}`,
     `i + nums[i] = ${currentStep.variables['i + nums[i]'] >= 0 ? currentStep.variables['i + nums[i]'] : '—'}`,
   ];
   const variableRows = variablePanel.select('.variable-rows').selectAll<SVGTextElement, string>('.variable-row').data(variableValues);
@@ -328,7 +329,7 @@ export function drawCanvas(
   const resultUpdate = resultEnter.merge(resultGroup);
   transition(resultUpdate)
     .style('opacity', 1)
-    .attr('transform', `translate(${width / 2}, ${startY + cellHeight + 100})`);
+    .attr('transform', `translate(${width / 2}, ${narrative ? startY + cellHeight + 96 : startY + cellHeight + 100})`);
   transition(resultUpdate.select<SVGRectElement>('.result-bg'))
     .attr('x', -112)
     .attr('y', -22)
@@ -343,16 +344,41 @@ export function drawCanvas(
     .attr('font-weight', 'bold')
     .text(d => d.result ? '✓ 可以到达终点' : '✗ 无法到达终点');
 
-  const description = infoLayer.selectAll<SVGForeignObjectElement, string>('.description-box').data([currentStep.description]);
-  const descriptionEnter = description.enter().append('foreignObject').attr('class', 'description-box');
-  descriptionEnter.append('xhtml:div').attr('class', 'canvas-description');
-  transition(descriptionEnter.merge(description))
-    .attr('x', Math.max(190, width * 0.2))
-    .attr('y', height - 52)
-    .attr('width', Math.max(140, width - Math.max(190, width * 0.2) - 24))
-    .attr('height', 40);
-  descriptionEnter.merge(description)
-    .select<HTMLDivElement>('.canvas-description')
-    .text(currentStep.description);
+  const narrativeData = narrative ? [narrative] : [];
+  const narrativeGroup = infoLayer.selectAll<SVGGElement, StepNarrative>('.narrative-group').data(narrativeData);
+  narrativeGroup.exit().remove();
+  const narrativeEnter = narrativeGroup.enter().append('g').attr('class', 'narrative-group');
+  narrativeEnter.append('rect').attr('class', 'narrative-card').attr('rx', 10);
+  narrativeEnter.append('text').attr('class', 'narrative-title');
+  narrativeEnter.append('text').attr('class', 'narrative-detail');
+  narrativeEnter.append('text').attr('class', 'narrative-conclusion');
+  const narrativeUpdate = narrativeEnter.merge(narrativeGroup);
+  transition(narrativeUpdate)
+    .attr('transform', `translate(${Math.max(210, width * 0.21)}, ${height - 104})`)
+    .style('opacity', 1);
+  transition(narrativeUpdate.select<SVGRectElement>('.narrative-card'))
+    .attr('width', Math.max(180, width - Math.max(210, width * 0.21) - 24))
+    .attr('height', 74)
+    .attr('fill', 'rgba(20, 27, 43, 0.92)')
+    .attr('stroke', action === 'fail' ? '#a44949' : action === 'success' ? '#3b9b64' : '#294b72');
+  transition(narrativeUpdate.select<SVGTextElement>('.narrative-title'))
+    .attr('x', 12)
+    .attr('y', 20)
+    .attr('fill', action === 'fail' ? '#ff7e7e' : action === 'success' ? '#6ee39a' : '#7ddcff')
+    .attr('font-size', 13)
+    .attr('font-weight', 'bold')
+    .text(d => d.title);
+  transition(narrativeUpdate.select<SVGTextElement>('.narrative-detail'))
+    .attr('x', 12)
+    .attr('y', 41)
+    .attr('fill', '#ffcb75')
+    .attr('font-size', 12)
+    .text(d => d.detail);
+  transition(narrativeUpdate.select<SVGTextElement>('.narrative-conclusion'))
+    .attr('x', 12)
+    .attr('y', 61)
+    .attr('fill', '#b8c2d6')
+    .attr('font-size', 11)
+    .text(d => d.conclusion);
 
 }

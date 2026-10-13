@@ -28,7 +28,7 @@ export function CodePanel({ currentStep }: CodePanelProps) {
   const variables = currentStep?.variables;
 
   return (
-    <section className="code-panel" aria-label="算法代码">
+    <section id="algorithm-code" className="code-panel" aria-label="算法代码">
       <div className="code-header">
         <div className="language-tabs" role="group" aria-label="选择编程语言">
           {(Object.keys(CODE_SNIPPETS) as ProgrammingLanguage[]).map(lang => (

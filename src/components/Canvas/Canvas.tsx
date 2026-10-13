@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import type { AlgorithmStep } from '../../types';
+import type { StepNarrative } from '../../utils/stepNarrative';
 import { drawCanvas } from './drawCanvas';
 import './Canvas.css';
 
 interface CanvasProps {
   currentStep: AlgorithmStep | null;
+  narrative: StepNarrative | null;
 }
 
-export function Canvas({ currentStep }: CanvasProps) {
+export function Canvas({ currentStep, narrative }: CanvasProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
@@ -25,8 +27,8 @@ export function Canvas({ currentStep }: CanvasProps) {
 
 
   const renderCanvas = useCallback(() => {
-    drawCanvas(svgRef.current, containerRef.current, currentStep, transform, reducedMotion, isDragging);
-  }, [currentStep, isDragging, reducedMotion, transform]);
+    drawCanvas(svgRef.current, containerRef.current, currentStep, transform, reducedMotion, isDragging, narrative);
+  }, [currentStep, isDragging, narrative, reducedMotion, transform]);
 
   useEffect(() => {
     renderCanvas();
@@ -76,7 +78,14 @@ export function Canvas({ currentStep }: CanvasProps) {
       onMouseLeave={handleMouseUp}
       onWheel={handleWheel}
     >
-      <svg ref={svgRef} className="canvas-svg" />
+      <svg
+        ref={svgRef}
+        className="canvas-svg"
+        role="img"
+        aria-label={narrative
+          ? `${narrative.title}。${narrative.detail}。${narrative.conclusion}。${currentStep?.description ?? ''}`
+          : currentStep?.description ?? '跳跃游戏可视化画布'}
+      />
       <button
         className="reset-view-btn"
         onClick={handleReset}
