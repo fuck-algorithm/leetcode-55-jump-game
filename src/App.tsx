@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Header } from './components/Header/Header';
 import { InputPanel } from './components/InputPanel/InputPanel';
 import { CodePanel } from './components/CodePanel/CodePanel';
@@ -6,42 +6,46 @@ import { Canvas } from './components/Canvas/Canvas';
 import { ControlPanel } from './components/ControlPanel/ControlPanel';
 import { ChatBubble } from './components/ChatBubble/ChatBubble';
 import { generateAlgorithmSteps, EXAMPLE_INPUTS } from './utils/algorithm';
-import type { AlgorithmStep } from './types';
 import './App.css';
 
 function App() {
   const [nums, setNums] = useState<number[]>(EXAMPLE_INPUTS[0].nums);
-  const [steps, setSteps] = useState<AlgorithmStep[]>([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
   const playIntervalRef = useRef<number | null>(null);
 
   // 生成算法步骤
-  useEffect(() => {
-    const newSteps = generateAlgorithmSteps(nums);
-    setSteps(newSteps);
-    setCurrentStepIndex(0);
-    setIsPlaying(false);
-  }, [nums]);
+  const steps = useMemo(() => generateAlgorithmSteps(nums), [nums]);
 
   // 自动播放
   useEffect(() => {
-    if (isPlaying && steps.length > 0) {
-      playIntervalRef.current = window.setInterval(() => {
-        setCurrentStepIndex(prev => {
-          if (prev >= steps.length - 1) {
-            setIsPlaying(false);
-            return prev;
-          }
-          return prev + 1;
-        });
-      }, 1500 / speed);
+    if (!isPlaying || steps.length <= 1) {
+      if (playIntervalRef.current !== null) {
+        window.clearInterval(playIntervalRef.current);
+        playIntervalRef.current = null;
+      }
+      return;
     }
 
+    playIntervalRef.current = window.setInterval(() => {
+      setCurrentStepIndex(prev => {
+        if (prev >= steps.length - 1) {
+          if (playIntervalRef.current !== null) {
+            window.clearInterval(playIntervalRef.current);
+            playIntervalRef.current = null;
+          }
+          setIsPlaying(false);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 1500 / speed);
+
     return () => {
-      if (playIntervalRef.current) {
-        clearInterval(playIntervalRef.current);
+      if (playIntervalRef.current !== null) {
+        window.clearInterval(playIntervalRef.current);
+        playIntervalRef.current = null;
       }
     };
   }, [isPlaying, speed, steps.length]);
@@ -82,6 +86,8 @@ function App() {
   }, []);
 
   const handleInputChange = useCallback((newNums: number[]) => {
+    setIsPlaying(false);
+    setCurrentStepIndex(0);
     setNums(newNums);
   }, []);
 
@@ -104,6 +110,8 @@ function App() {
       <ControlPanel
         currentStep={currentStepIndex}
         totalSteps={steps.length}
+        currentAction={currentStep?.action ?? null}
+        currentDescription={currentStep?.description ?? ''}
         isPlaying={isPlaying}
         onPlay={handlePlay}
         onPause={handlePause}

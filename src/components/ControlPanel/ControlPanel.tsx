@@ -5,6 +5,8 @@ import './ControlPanel.css';
 interface ControlPanelProps {
   currentStep: number;
   totalSteps: number;
+  currentAction: 'init' | 'check' | 'update' | 'fail' | 'success' | null;
+  currentDescription: string;
   isPlaying: boolean;
   onPlay: () => void;
   onPause: () => void;
@@ -17,9 +19,19 @@ interface ControlPanelProps {
 
 const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
+const ACTION_LABELS: Record<NonNullable<ControlPanelProps['currentAction']>, string> = {
+  init: '初始化',
+  check: '检查可达性',
+  update: '更新最远位置',
+  fail: '无法继续',
+  success: '完成',
+};
+
 export function ControlPanel({
   currentStep,
   totalSteps,
+  currentAction,
+  currentDescription,
   isPlaying,
   onPlay,
   onPause,
@@ -61,7 +73,11 @@ export function ControlPanel({
         break;
       case 'Space':
         e.preventDefault();
-        isPlaying ? onPause() : onPlay();
+        if (isPlaying) {
+          onPause();
+        } else {
+          onPlay();
+        }
         break;
       case 'KeyR':
         e.preventDefault();
@@ -77,6 +93,7 @@ export function ControlPanel({
 
   // 进度条拖拽
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (totalSteps <= 1) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const percentage = x / rect.width;
@@ -91,14 +108,23 @@ export function ControlPanel({
 
   const progress = totalSteps > 1 ? (currentStep / (totalSteps - 1)) * 100 : 0;
 
+  const actionLabel = currentAction ? ACTION_LABELS[currentAction] : '准备开始';
+  const isComplete = totalSteps > 0 && currentStep === totalSteps - 1;
+
   return (
     <div className="control-panel">
+      <div className="step-summary" aria-live="polite">
+        <span className={`action-badge action-${currentAction ?? 'idle'}`}>{actionLabel}</span>
+        <span className="step-description">{currentDescription}</span>
+        {isComplete && <span className="complete-badge">已完成</span>}
+      </div>
       <div className="control-buttons">
         <button 
           className="control-btn" 
           onClick={onPrev}
           disabled={currentStep === 0}
           title="上一步 (←)"
+          aria-label="上一步"
         >
           ⏮ 上一步 <kbd>←</kbd>
         </button>
@@ -107,6 +133,7 @@ export function ControlPanel({
           className="control-btn play-btn" 
           onClick={isPlaying ? onPause : onPlay}
           title={isPlaying ? '暂停 (空格)' : '播放 (空格)'}
+          aria-label={isPlaying ? '暂停播放' : '开始播放'}
         >
           {isPlaying ? '⏸ 暂停' : '▶ 播放'} <kbd>空格</kbd>
         </button>
@@ -116,6 +143,7 @@ export function ControlPanel({
           onClick={onNext}
           disabled={currentStep === totalSteps - 1}
           title="下一步 (→)"
+          aria-label="下一步"
         >
           下一步 ⏭ <kbd>→</kbd>
         </button>
@@ -124,24 +152,30 @@ export function ControlPanel({
           className="control-btn reset-btn" 
           onClick={onReset}
           title="重置 (R)"
+          aria-label="重置播放进度"
         >
           ↺ 重置 <kbd>R</kbd>
         </button>
 
         <div className="speed-control">
-          <button 
+          <button
             className="speed-btn"
             onClick={() => setShowSpeedMenu(!showSpeedMenu)}
+            aria-expanded={showSpeedMenu}
+            aria-haspopup="menu"
+            aria-label={`播放速度，当前 ${speed} 倍`}
           >
             {speed}x 速度 ▾
           </button>
           {showSpeedMenu && (
-            <div className="speed-menu">
+            <div className="speed-menu" role="menu">
               {SPEED_OPTIONS.map(s => (
                 <button
                   key={s}
                   className={`speed-option ${speed === s ? 'active' : ''}`}
                   onClick={() => handleSpeedChange(s)}
+                  role="menuitemradio"
+                  aria-checked={speed === s}
                 >
                   {s}x
                 </button>
@@ -155,10 +189,20 @@ export function ControlPanel({
         </div>
       </div>
 
-      <div 
+      <div
         className="progress-bar"
+        role="slider"
+        tabIndex={0}
+        aria-label="动画步骤进度"
+        aria-valuemin={0}
+        aria-valuemax={Math.max(totalSteps - 1, 0)}
+        aria-valuenow={currentStep}
         onClick={handleProgressClick}
         onMouseMove={handleProgressDrag}
+        onKeyDown={e => {
+          if (e.key === 'ArrowLeft') onSeek(Math.max(0, currentStep - 1));
+          if (e.key === 'ArrowRight') onSeek(Math.min(totalSteps - 1, currentStep + 1));
+        }}
       >
         <div 
           className="progress-fill"

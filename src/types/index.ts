@@ -4,6 +4,8 @@ export interface AlgorithmStep {
   description: string;
   currentIndex: number;
   maxReach: number;
+  previousMaxReach?: number;
+  candidateReach?: number;
   nums: number[];
   canReach: boolean[];
   highlightedLines: {

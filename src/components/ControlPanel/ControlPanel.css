@@ -1,43 +1,103 @@
 .control-panel {
   background: #16213e;
-  border-top: 1px solid #0f3460;
-  padding: 12px 16px;
+  border-top: 1px solid #294b72;
+  padding: 10px 16px 12px;
+}
+
+.step-summary {
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 1180px;
+  margin: 0 auto 8px;
+  color: #b8c2d6;
+  font-size: 12px;
+}
+
+.action-badge,
+.complete-badge {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border: 1px solid #3d5d83;
+  border-radius: 999px;
+  color: #b8c2d6;
+  background: rgba(41, 75, 114, 0.28);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.action-check {
+  color: #7ddcff;
+  border-color: #3984a8;
+}
+
+.action-update {
+  color: #ffcb75;
+  border-color: #9d7432;
+}
+
+.action-fail {
+  color: #ff7e7e;
+  border-color: #a44949;
+}
+
+.action-success,
+.complete-badge {
+  color: #6ee39a;
+  border-color: #3b9b64;
+  background: rgba(42, 120, 77, 0.22);
+}
+
+.step-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.complete-badge {
+  margin-left: auto;
 }
 
 .control-buttons {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
 .control-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  min-height: 36px;
+  padding: 8px 14px;
   background: #1a1a2e;
-  border: 1px solid #0f3460;
-  border-radius: 6px;
-  color: #e0e0e0;
+  border: 1px solid #294b72;
+  border-radius: 7px;
+  color: #d9e3f4;
   font-size: 13px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
-.control-btn:hover:not(:disabled) {
-  border-color: #4fc3f7;
-  color: #4fc3f7;
+.control-btn:hover:not(:disabled),
+.control-btn:focus-visible {
+  border-color: #7ddcff;
+  color: #7ddcff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(125, 220, 255, 0.16);
 }
 
 .control-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.42;
   cursor: not-allowed;
 }
 
 .control-btn kbd {
-  background: #0f3460;
+  background: #294b72;
   padding: 2px 6px;
   border-radius: 3px;
   font-size: 11px;
@@ -46,30 +106,33 @@
 
 .play-btn {
   background: #4fc3f7;
-  color: #1a1a2e;
+  color: #101827;
   border-color: #4fc3f7;
   font-weight: 600;
 }
 
-.play-btn:hover {
-  background: #81d4fa;
-  border-color: #81d4fa;
-  color: #1a1a2e !important;
+.play-btn:hover:not(:disabled),
+.play-btn:focus-visible {
+  background: #8bdfff;
+  border-color: #8bdfff;
+  color: #101827;
 }
 
 .play-btn kbd {
   background: rgba(26, 26, 46, 0.3);
-  color: #1a1a2e;
+  color: #101827;
 }
 
 .reset-btn {
-  color: #ff9800;
-  border-color: #ff9800;
+  color: #ffb347;
+  border-color: #9d7432;
 }
 
-.reset-btn:hover {
-  background: #ff9800;
-  color: #1a1a2e !important;
+.reset-btn:hover:not(:disabled),
+.reset-btn:focus-visible {
+  background: #ffb347;
+  border-color: #ffb347;
+  color: #101827;
 }
 
 .speed-control {
@@ -77,76 +140,90 @@
 }
 
 .speed-btn {
+  min-height: 36px;
   padding: 8px 12px;
   background: #1a1a2e;
-  border: 1px solid #0f3460;
-  border-radius: 6px;
-  color: #e0e0e0;
+  border: 1px solid #294b72;
+  border-radius: 7px;
+  color: #d9e3f4;
   font-size: 13px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
-.speed-btn:hover {
-  border-color: #4fc3f7;
+.speed-btn:hover,
+.speed-btn:focus-visible {
+  border-color: #7ddcff;
+  outline: none;
 }
 
 .speed-menu {
   position: absolute;
-  bottom: 100%;
+  bottom: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
+  min-width: 86px;
   background: #1a1a2e;
-  border: 1px solid #0f3460;
-  border-radius: 6px;
+  border: 1px solid #294b72;
+  border-radius: 7px;
   padding: 4px;
-  margin-bottom: 4px;
   display: flex;
   flex-direction: column;
   gap: 2px;
   z-index: 100;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
 }
 
 .speed-option {
-  padding: 6px 16px;
+  padding: 7px 16px;
   background: transparent;
   border: none;
   border-radius: 4px;
-  color: #e0e0e0;
+  color: #d9e3f4;
   font-size: 13px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s ease;
   white-space: nowrap;
 }
 
-.speed-option:hover {
-  background: #0f3460;
+.speed-option:hover,
+.speed-option:focus-visible {
+  background: #294b72;
+  outline: none;
 }
 
 .speed-option.active {
   background: #4fc3f7;
-  color: #1a1a2e;
+  color: #101827;
 }
 
 .step-indicator {
-  color: #888;
-  font-size: 13px;
-  margin-left: 12px;
+  color: #8997af;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .progress-bar {
   height: 8px;
+  max-width: 1180px;
+  margin: 0 auto;
   background: #1a1a2e;
-  border-radius: 4px;
+  border: 1px solid rgba(41, 75, 114, 0.6);
+  border-radius: 5px;
   cursor: pointer;
   position: relative;
+  outline: none;
+}
+
+.progress-bar:focus-visible {
+  box-shadow: 0 0 0 2px rgba(125, 220, 255, 0.35);
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #4fc3f7, #4caf50);
+  background: linear-gradient(90deg, #4fc3f7, #53d58a);
   border-radius: 4px;
-  transition: width 0.1s;
+  transition: width 0.18s ease;
 }
 
 .progress-handle {
@@ -159,7 +236,7 @@
   border: 2px solid #4fc3f7;
   border-radius: 50%;
   cursor: grab;
-  transition: transform 0.1s;
+  transition: transform 0.12s ease;
 }
 
 .progress-handle:hover {
@@ -168,4 +245,52 @@
 
 .progress-bar:active .progress-handle {
   cursor: grabbing;
+}
+
+@media (max-width: 760px) {
+  .control-panel {
+    padding: 9px 10px 11px;
+  }
+
+  .step-summary {
+    align-items: flex-start;
+    margin-bottom: 7px;
+  }
+
+  .step-description {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .control-buttons {
+    gap: 6px;
+    margin-bottom: 9px;
+  }
+
+  .control-btn {
+    min-height: 34px;
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+
+  .control-btn kbd {
+    display: none;
+  }
+
+  .speed-btn {
+    min-height: 34px;
+    padding: 7px 9px;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control-btn,
+  .speed-btn,
+  .speed-option,
+  .progress-fill {
+    transition: none;
+  }
 }

@@ -6,6 +6,35 @@ export function generateAlgorithmSteps(nums: number[]): AlgorithmStep[] {
   const n = nums.length;
   let k = 0;
   const canReach = new Array(n).fill(false);
+
+  if (n === 0) {
+    return [{
+      stepIndex: 0,
+      description: '数组为空，没有可达的起点，返回 false',
+      currentIndex: -1,
+      maxReach: -1,
+      previousMaxReach: -1,
+      candidateReach: -1,
+      nums: [],
+      canReach: [],
+      highlightedLines: {
+        java: [8],
+        python: [6],
+        golang: [10],
+        javascript: [10],
+      },
+      variables: {
+        i: -1,
+        k: -1,
+        'nums[i]': -1,
+        'i + nums[i]': -1,
+      },
+      isComplete: true,
+      result: false,
+      action: 'fail',
+    }];
+  }
+
   canReach[0] = true;
 
   // 初始化步骤
@@ -14,6 +43,8 @@ export function generateAlgorithmSteps(nums: number[]): AlgorithmStep[] {
     description: '初始化：设置最远可达位置 k = 0，从第一个位置开始',
     currentIndex: -1,
     maxReach: 0,
+    previousMaxReach: -1,
+    candidateReach: -1,
     nums: [...nums],
     canReach: [...canReach],
     highlightedLines: {
@@ -41,6 +72,8 @@ export function generateAlgorithmSteps(nums: number[]): AlgorithmStep[] {
         description: `位置 ${i} 超出最远可达范围 ${k}，无法到达，返回 false`,
         currentIndex: i,
         maxReach: k,
+        previousMaxReach: k,
+        candidateReach: i + nums[i],
         nums: [...nums],
         canReach: [...canReach],
         highlightedLines: {
@@ -71,6 +104,8 @@ export function generateAlgorithmSteps(nums: number[]): AlgorithmStep[] {
       description: `检查位置 ${i}：当前位置 i=${i} ≤ 最远可达 k=${k}，可以到达此位置`,
       currentIndex: i,
       maxReach: k,
+      previousMaxReach: k,
+      candidateReach: i + nums[i],
       nums: [...nums],
       canReach: [...canReach],
       highlightedLines: {
@@ -103,6 +138,8 @@ export function generateAlgorithmSteps(nums: number[]): AlgorithmStep[] {
         description: `更新最远可达：k = max(${k}, ${i} + ${nums[i]}) = max(${k}, ${i + nums[i]}) = ${newK}`,
         currentIndex: i,
         maxReach: newK,
+        previousMaxReach: k,
+        candidateReach: i + nums[i],
         nums: [...nums],
         canReach: [...canReach],
         highlightedLines: {
@@ -126,6 +163,8 @@ export function generateAlgorithmSteps(nums: number[]): AlgorithmStep[] {
         description: `最远可达不变：k = max(${k}, ${i + nums[i]}) = ${k}`,
         currentIndex: i,
         maxReach: k,
+        previousMaxReach: k,
+        candidateReach: i + nums[i],
         nums: [...nums],
         canReach: [...canReach],
         highlightedLines: {
@@ -159,6 +198,8 @@ export function generateAlgorithmSteps(nums: number[]): AlgorithmStep[] {
     description: `遍历完成：最远可达位置 k=${k} ≥ 最后位置 ${n - 1}，返回 true`,
     currentIndex: n - 1,
     maxReach: k,
+    previousMaxReach: k,
+    candidateReach: n - 1 + nums[n - 1],
     nums: [...nums],
     canReach: [...canReach],
     highlightedLines: {
